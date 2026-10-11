@@ -59,17 +59,23 @@
   height: 100vh;
   display: grid;
   place-items: center;
-  padding: -50px;
+  padding: 0;
   position: relative;
   z-index: 2;
   overflow: hidden;
 }
 
-    .book-wrap {
+.book-wrap {
   width: var(--book-w);
   position: relative;
   perspective: 2600px;
-  margin-top: -20px; /* move the whole book up */
+  margin-top: 0;
+  transform-origin: center center;
+  transition: transform .2s ease;
+}
+
+.book-wrap.fit{
+  transform:scale(var(--book-scale,1));
 }
 
     /* FRONT COVER */
@@ -3278,33 +3284,7 @@
       100%{top:28%;transform:rotate(10deg)}
     }
 
-    @media(max-width:1220px){
-      .book-wrap{
-        transform:scale(.88);
-        transform-origin:center center;
-      }
-    }
-
-    @media(max-width:1000px){
-      .book-wrap{
-        transform:scale(.72);
-        transform-origin:center center;
-      }
-    }
-
-    @media(max-height:830px){
-      .book-wrap{
-        transform:scale(.84);
-        transform-origin:center center;
-      }
-    }
-
-    @media(max-height:700px){
-      .book-wrap{
-        transform:scale(.68);
-        transform-origin:center center;
-      }
-    }
+ 
   /* CUTE RECTANGLE BIRTHDAY CALENDAR */
 /* CUTE RECTANGLE BIRTHDAY CALENDAR */
 .hero-calendar{
@@ -4860,8 +4840,29 @@ if(backHeartVideo&&backHeartPlay){
   backHeartPlay.onclick=toggleBackHeartVideo;
   backHeartVideo.onclick=toggleBackHeartVideo;
 }
-    createFlyingPixie("left");
-    createFlyingPixie("right");
+  const bookWrap=document.querySelector(".book-wrap");
+
+function fitBookToScreen(){
+  const availableWidth=window.innerWidth-16;
+  const availableHeight=window.innerHeight-24;
+
+  const bookWidth=1120+130;
+  const bookHeight=750+78;
+
+  const scaleX=availableWidth/bookWidth;
+  const scaleY=availableHeight/bookHeight;
+
+  const scale=Math.min(scaleX,scaleY);
+
+  bookWrap.style.setProperty("--book-scale",scale);
+  bookWrap.classList.add("fit");
+}
+
+fitBookToScreen();
+window.addEventListener("resize",fitBookToScreen);
+
+createFlyingPixie("left");
+createFlyingPixie("right");
   </script>
 </body>
 </html>
